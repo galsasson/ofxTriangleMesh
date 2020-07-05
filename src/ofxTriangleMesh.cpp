@@ -3,8 +3,7 @@
 
 
 
-
-
+//#define DUPLICATE_VERTS
 
 
 void triangulatePoints(char * flags, triangulateio * in, triangulateio * mid, 
@@ -156,22 +155,23 @@ void ofxTriangleMesh::triangulate(ofPolyline contour, float angleConstraint, flo
     
     triangulatedMesh.clear();
     triangulatedMesh.setMode(OF_PRIMITIVE_TRIANGLES);
-#ifdef ORIG_CODE
-    for (int i = 0; i < outputPts.size(); i++){
-        triangulatedMesh.addVertex(outputPts[i]);
-    }
-    
-    for (int i = 0; i < triangles.size(); i++){
-        triangulatedMesh.addIndex(triangles[i].index[0]);;
-        triangulatedMesh.addIndex(triangles[i].index[1]);;
-        triangulatedMesh.addIndex(triangles[i].index[2]);;
-    }
-#else
+#ifdef DUPLICATE_VERTS
 	for (int i = 0; i < triangles.size(); i++){
 		triangulatedMesh.addVertex(outputPts[triangles[i].index[0]]);
 		triangulatedMesh.addVertex(outputPts[triangles[i].index[1]]);
 		triangulatedMesh.addVertex(outputPts[triangles[i].index[2]]);
 	}
+#else
+	for (int i = 0; i < outputPts.size(); i++){
+		triangulatedMesh.addVertex(outputPts[i]);
+		
+	}
+	
+	for (int i = 0; i < triangles.size(); i++){
+        triangulatedMesh.addIndex(triangles[i].index[0]);
+        triangulatedMesh.addIndex(triangles[i].index[1]);
+        triangulatedMesh.addIndex(triangles[i].index[2]);
+    }
 #endif
 
     // depending on flags, we may need to adjust some of the memory clearing
